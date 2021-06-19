@@ -1,0 +1,546 @@
+package ventanas;
+
+import java.awt.Color;
+import java.awt.event.ItemEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.util.ArrayList;
+import java.util.HashSet;
+import javax.swing.JTable;
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.TableColumn;
+import javax.swing.JOptionPane;
+
+public class PuntaIndicador extends javax.swing.JFrame {
+
+    public static int k = 0;
+    public static PuntaIndicador obj = null;
+    public String form = "";
+    public String form2 = "";
+    public static String cod = "";
+    public static String descripcion = new String();
+    public static String codigo2 = new String();
+    ArrayList<String> listalon = new ArrayList();
+    public HashSet hs = new HashSet();
+
+    String data[][] = {};
+    String cabeza[] = {"Codigo", "Descripción", "Info", "Cotizar", "Total", "Me", "Ca", "Bo", "Ma"};
+    DefaultTableModel model = new DefaultTableModel(data, cabeza) {
+
+        //Metodo que permite que no se púeda editar los valores de la tabla
+        @Override
+        public Class getColumnClass(int indiceColumna) {
+            Object k = getValueAt(0, indiceColumna);
+            if (k == null) {
+                return Object.class;
+            } else {
+                return k.getClass();
+            }
+        }
+
+        //Metodo que permite que no se púeda editar los valores de la tabla
+        @Override
+        public boolean isCellEditable(int filas, int columnas) {
+            if (columnas == 9) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+    };
+
+    public PuntaIndicador() {
+        initComponents();
+        setTitle("Punta para indicador");
+        this.setLocationRelativeTo(null);
+        this.setResizable(false);
+        this.getContentPane().setBackground(Color.WHITE);
+        cargar_para();
+        cargar_imagen();
+    }
+
+    public static PuntaIndicador getObj() {
+        if (obj == null) {
+            obj = new PuntaIndicador();
+        }
+        return obj;
+    }
+
+    @SuppressWarnings("unchecked")
+    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
+    private void initComponents() {
+
+        jLabel1 = new javax.swing.JLabel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        tabla_resultados = new javax.swing.JTable();
+        Espesor = new javax.swing.JLabel();
+        combo_para = new javax.swing.JComboBox<>();
+        Material2 = new javax.swing.JLabel();
+        combo_marca = new javax.swing.JComboBox<>();
+        label_dim = new javax.swing.JLabel();
+        Material3 = new javax.swing.JLabel();
+        combo_material = new javax.swing.JComboBox<>();
+        Material4 = new javax.swing.JLabel();
+        combo_desfera = new javax.swing.JComboBox<>();
+        jMenuBar1 = new javax.swing.JMenuBar();
+        jMenu1 = new javax.swing.JMenu();
+        menu_recargar = new javax.swing.JMenuItem();
+        jMenuItem2 = new javax.swing.JMenuItem();
+        jMenu2 = new javax.swing.JMenu();
+
+        setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
+
+        jLabel1.setText("Seleccione las caracteristicas de la punta");
+
+        tabla_resultados.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null},
+                {null, null, null, null, null, null, null, null, null}
+            },
+            new String [] {
+                "Codigo", "Descripción", "Info", "Cotizar", "Total", "Me", "Ca", "Bo", "Ma"
+            }
+        ));
+        jScrollPane1.setViewportView(tabla_resultados);
+        if (tabla_resultados.getColumnModel().getColumnCount() > 0) {
+            tabla_resultados.getColumnModel().getColumn(0).setMaxWidth(50);
+            tabla_resultados.getColumnModel().getColumn(2).setMaxWidth(40);
+            tabla_resultados.getColumnModel().getColumn(3).setMaxWidth(50);
+            tabla_resultados.getColumnModel().getColumn(4).setMaxWidth(38);
+            tabla_resultados.getColumnModel().getColumn(5).setMaxWidth(27);
+            tabla_resultados.getColumnModel().getColumn(6).setMaxWidth(27);
+            tabla_resultados.getColumnModel().getColumn(7).setMaxWidth(27);
+            tabla_resultados.getColumnModel().getColumn(8).setMaxWidth(27);
+        }
+
+        Espesor.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/forma_icono.png"))); // NOI18N
+        Espesor.setText("Para");
+
+        combo_para.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                combo_paraItemStateChanged(evt);
+            }
+        });
+
+        Material2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/marca_icono.png"))); // NOI18N
+        Material2.setText("Marca");
+
+        combo_marca.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                combo_marcaItemStateChanged(evt);
+            }
+        });
+
+        Material3.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/material_icono.png"))); // NOI18N
+        Material3.setText("Material");
+
+        combo_material.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                combo_materialItemStateChanged(evt);
+            }
+        });
+
+        Material4.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/diametro_icono.png"))); // NOI18N
+        Material4.setText("Diámetro punta");
+
+        combo_desfera.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                combo_desferaItemStateChanged(evt);
+            }
+        });
+
+        jMenu1.setText("Opciones");
+
+        menu_recargar.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_NUMPAD4, java.awt.event.InputEvent.ALT_MASK));
+        menu_recargar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/limpiar2_icono.png"))); // NOI18N
+        menu_recargar.setText("Limpiar");
+        jMenu1.add(menu_recargar);
+
+        jMenuItem2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/images/recargar_icono.png"))); // NOI18N
+        jMenuItem2.setText("Regargar");
+        jMenu1.add(jMenuItem2);
+
+        jMenuBar1.add(jMenu1);
+
+        jMenu2.setText("Edit");
+        jMenuBar1.add(jMenu2);
+
+        setJMenuBar(jMenuBar1);
+
+        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+        getContentPane().setLayout(layout);
+        layout.setHorizontalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(layout.createSequentialGroup()
+                .addGap(30, 30, 30)
+                .addComponent(label_dim, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(34, 34, 34)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(Espesor)
+                            .addComponent(combo_para, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(20, 20, 20)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(combo_marca, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(Material2))
+                        .addGap(18, 18, 18)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(combo_material, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(Material3))
+                        .addGap(20, 20, 20)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(Material4)
+                            .addComponent(combo_desfera, javax.swing.GroupLayout.PREFERRED_SIZE, 93, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(jLabel1)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(20, 20, 20))
+        );
+        layout.setVerticalGroup(
+            layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(14, Short.MAX_VALUE)
+                .addComponent(jLabel1)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(Espesor)
+                            .addComponent(Material2)
+                            .addComponent(Material3)
+                            .addComponent(Material4))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(combo_para, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(combo_marca, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(combo_desfera, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(combo_material, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(18, 18, 18)
+                        .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 115, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                        .addGap(18, 18, 18)
+                        .addComponent(label_dim, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addGap(38, 38, 38))
+        );
+
+        pack();
+    }// </editor-fold>//GEN-END:initComponents
+
+    private void PropiedadesTabla() {
+        tabla_resultados.setRowHeight(26);
+        TableColumn codigo = tabla_resultados.getColumn("Codigo");
+        TableColumn desc = tabla_resultados.getColumn("Descripción");
+        TableColumn info = tabla_resultados.getColumn("Info");
+        TableColumn cotizar = tabla_resultados.getColumn("Cotizar");
+        TableColumn total = tabla_resultados.getColumn("Total");
+        TableColumn me = tabla_resultados.getColumn("Me");
+        TableColumn ca = tabla_resultados.getColumn("Ca");
+        TableColumn bo = tabla_resultados.getColumn("Bo");
+        TableColumn ma = tabla_resultados.getColumn("Ma");
+        codigo.setMaxWidth(50);
+        info.setMaxWidth(40);
+        cotizar.setMaxWidth(50);
+        total.setMaxWidth(38);
+        me.setMaxWidth(27);
+        bo.setMaxWidth(27);
+        ca.setMaxWidth(27);
+        ma.setMaxWidth(27);
+    }
+
+
+    private void combo_paraItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_combo_paraItemStateChanged
+        if (evt.getStateChange() == ItemEvent.SELECTED) {
+            cargar_marca();
+            cargar_imagen();
+        }
+    }//GEN-LAST:event_combo_paraItemStateChanged
+
+    private void combo_marcaItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_combo_marcaItemStateChanged
+        if (evt.getStateChange() == ItemEvent.SELECTED) {
+            cargar_material();
+        }
+    }//GEN-LAST:event_combo_marcaItemStateChanged
+
+    private void combo_materialItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_combo_materialItemStateChanged
+        if (evt.getStateChange() == ItemEvent.SELECTED) {
+            cargar_desfera();
+        }
+    }//GEN-LAST:event_combo_materialItemStateChanged
+
+    private void combo_desferaItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_combo_desferaItemStateChanged
+        buscar();
+    }//GEN-LAST:event_combo_desferaItemStateChanged
+
+    private void cargar_imagen() {
+        form = combo_para.getSelectedItem().toString();
+        ImageIcon imagen1 = new ImageIcon("src/images/punta_" + form + ".png");
+        Icon icono1 = new ImageIcon(imagen1.getImage());
+        label_dim.setIcon(icono1);
+    }
+
+    private void cargar_para() {
+        combo_para.removeAllItems();
+        try {
+            //Conexión con la base de datos
+            Connection cn = DriverManager.getConnection("jdbc:mysql://localhost/catalogo", "root", "");
+            //Instrucciones para la busqueda en la base de datos
+            PreparedStatement pst = cn.prepareStatement("select distinct para from punta_indicador where (total > 0) order by para asc");
+
+            //Declaración de la variable que alberga el resultado de la busqueda
+            ResultSet rs = pst.executeQuery();
+
+            //Metodo para que busque todos los resultados posible con las condiciones dadas
+            while (rs.next()) {
+                String para = rs.getString("para");
+                combo_para.addItem(para);
+            }
+            rs.close();
+            cn.close();
+        } catch (Exception e) {
+            System.out.println("Se perdio la conexión en cargar_para");
+        }
+    }
+
+    private void cargar_marca() {
+        combo_marca.removeAllItems();
+        try {
+            //Conexión con la base de datos
+            Connection cn2 = DriverManager.getConnection("jdbc:mysql://localhost/catalogo", "root", "");
+            //Instrucciones para la busqueda en la base de datos
+            PreparedStatement pst2 = cn2.prepareStatement("select distinct marca from punta_indicador where (total > 0) AND (para=?) order by marca asc");
+
+            pst2.setString(1, combo_para.getSelectedItem().toString());
+            //Declaración de la variable que alberga el resultado de la busqueda
+            ResultSet rs2 = pst2.executeQuery();
+
+            //Metodo para que busque todos los resultados posible con las condiciones dadas
+            while (rs2.next()) {
+                String marca = rs2.getString("marca");
+                combo_marca.addItem(marca);
+            }
+            rs2.close();
+            cn2.close();
+        } catch (Exception e) {
+            System.out.println("Se perdio la conexión en cargar_marca");
+        }
+    }
+
+    private void cargar_material() {
+        combo_material.removeAllItems();
+        try {
+            //Conexión con la base de datos
+            Connection cn2 = DriverManager.getConnection("jdbc:mysql://localhost/catalogo", "root", "");
+            //Instrucciones para la busqueda en la base de datos
+            PreparedStatement pst2 = cn2.prepareStatement("select distinct material from punta_indicador where (total > 0) AND (para=?) AND (marca=?) order by material asc");
+
+            pst2.setString(1, combo_para.getSelectedItem().toString());
+            pst2.setString(2, combo_marca.getSelectedItem().toString());
+
+            //Declaración de la variable que alberga el resultado de la busqueda
+            ResultSet rs2 = pst2.executeQuery();
+
+            //Metodo para que busque todos los resultados posible con las condiciones dadas
+            while (rs2.next()) {
+                String material = rs2.getString("material");
+                combo_material.addItem(material);
+            }
+            rs2.close();
+            cn2.close();
+        } catch (Exception e) {
+            System.out.println("Se perdio la conexión en cargar_material");
+        }
+    }
+
+    private void cargar_desfera() {
+        combo_desfera.removeAllItems();
+        try {
+            //Conexión con la base de datos
+            Connection cn2 = DriverManager.getConnection("jdbc:mysql://localhost/catalogo", "root", "");
+            //Instrucciones para la busqueda en la base de datos
+            PreparedStatement pst2 = cn2.prepareStatement("select distinct desfera from punta_indicador where (total > 0) AND (para=?) AND (marca=?) AND (material=?) order by desfera asc");
+
+            pst2.setString(1, combo_para.getSelectedItem().toString());
+            pst2.setString(2, combo_marca.getSelectedItem().toString());
+            pst2.setString(3, combo_material.getSelectedItem().toString());
+
+            //Declaración de la variable que alberga el resultado de la busqueda
+            ResultSet rs2 = pst2.executeQuery();
+
+            //Metodo para que busque todos los resultados posible con las condiciones dadas
+            while (rs2.next()) {
+                String desfera = rs2.getString("desfera");
+                combo_desfera.addItem(desfera);
+            }
+            rs2.close();
+            cn2.close();
+        } catch (Exception e) {
+            System.out.println("Se perdio la conexión en cargar_desfera");
+        }
+    }
+
+    private static boolean isNumeric(String cadena) {
+        try {
+            Integer.parseInt(cadena);
+            return true;
+        } catch (NumberFormatException nfe) {
+            return false;
+        }
+    }
+
+    private void buscar() {
+        try {
+
+            //Conexión con la base de datos 
+            Connection cn5 = DriverManager.getConnection("jdbc:mysql://localhost/catalogo", "root", "");
+            //Instrucciones para la busqueda en la base de datos
+            PreparedStatement pst5 = cn5.prepareStatement("select * from punta_indicador where (total > 0) AND (para= ?) AND (marca= ?) AND (material= ?) AND (desfera= ?)");
+
+            pst5.setString(1, combo_para.getSelectedItem().toString());
+            pst5.setString(2, combo_marca.getSelectedItem().toString());
+            pst5.setString(3, combo_material.getSelectedItem().toString());
+            pst5.setString(4, combo_desfera.getSelectedItem().toString());
+
+            // Declaración de la variable que alberga el resultado de la busqueda
+            ResultSet rs5 = pst5.executeQuery();
+
+            //Se limpian los componentes de la tabla luego de cada busqueda 
+            model.setRowCount(0);
+
+            //Ajuste de la tabla al JScrollPane 
+            tabla_resultados = new JTable(model);
+            jScrollPane1.setViewportView(tabla_resultados);
+            PropiedadesTabla();
+
+            //Metodo para que busque todos los resultados posible con las condiciones dadas
+            while (rs5.next()) {
+
+                //txt_codigo.setText(rs.getString("codigo"));
+                String cod = rs5.getString("codigo");
+                String estado = rs5.getString("descripcion");
+                String total = rs5.getString("total");
+                String me = rs5.getString("me");
+                String ca = rs5.getString("ca");
+                String bo = rs5.getString("bo");
+                String ma = rs5.getString("ma");
+
+                ImageIcon imagen1 = new ImageIcon("src/images/informacion.png");
+                Icon icono1 = new ImageIcon(imagen1.getImage());
+                ImageIcon imagen2 = new ImageIcon("src/images/carrito.png");
+                Icon icono2 = new ImageIcon(imagen2.getImage());
+                model.addRow(new Object[]{cod, estado, icono1, icono2, total, me, ca, bo, ma});
+
+            }
+            rs5.close();
+            cn5.close();
+        } catch (Exception e) {
+            System.out.println("no hay conexion en buscar");
+        }
+        //Metodo para mostrar la información del elmento que se encuentra en la fila que selecciona y se da click
+        tabla_resultados.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                //int fila_point = tabla_resultados.rowAtPoint(e.getPoint());
+                int fila_point = tabla_resultados.rowAtPoint(e.getPoint());
+                int columna_point = tabla_resultados.columnAtPoint(e.getPoint());
+
+                if (fila_point > -1 && columna_point == 2) {
+                    codigo2 = (String) model.getValueAt(fila_point, columna_point = 0);
+                    descripcion = (String) model.getValueAt(fila_point, columna_point = 1);
+                    InformacionPuntaIndicador informacionpuntaindicador = new InformacionPuntaIndicador();
+                    informacionpuntaindicador.setVisible(true);
+                    codigo2 = "";
+                }
+
+                if (fila_point > -1 && columna_point == 3) {
+                    pdf.contar();
+                    if (pdf.limite <= 49) {
+                        codigo2 = (String) model.getValueAt(fila_point, columna_point = 0);
+                        descripcion = (String) model.getValueAt(fila_point, columna_point = 1);
+                        String canti = JOptionPane.showInputDialog(null, "¿Cuantas unidades del codigo " + codigo2 + "\n     desea agregar a la cotización?", "Cantidad", JOptionPane.QUESTION_MESSAGE);
+                        if (isNumeric(canti)) {
+                            k = Integer.parseInt(canti);
+                        } else {
+                            System.out.println("no es posible transformar el string" + canti + "a un número entero");
+                        }
+                        boolean n = isNumeric(canti);
+                        if (isNumeric(canti) && n == true && k > 0) {
+                            pdf.AddRowToJTable(new Object[]{"", codigo2, "", "", "", "", canti});
+                            pdf.cargar_nombre();
+                            pdf.calcular_total();
+                        } else {
+                            JOptionPane.showMessageDialog(null, "Debe ingresar un valor numérico mayor a 0", "Advertencia", HEIGHT);
+                        }
+                    } else {
+                        JOptionPane.showMessageDialog(null, "No es posible agregar mas items a la cotización", "Advertencia", HEIGHT);
+                    }
+                }
+            }
+        });
+    }
+
+    /**
+     * @param args the command line arguments
+     */
+    public static void main(String args[]) {
+        /* Set the Nimbus look and feel */
+        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
+        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
+         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
+         */
+        try {
+            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+                if ("Nimbus".equals(info.getName())) {
+                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                    break;
+                }
+            }
+        } catch (ClassNotFoundException ex) {
+            java.util.logging.Logger.getLogger(PuntaIndicador.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (InstantiationException ex) {
+            java.util.logging.Logger.getLogger(PuntaIndicador.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (IllegalAccessException ex) {
+            java.util.logging.Logger.getLogger(PuntaIndicador.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+            java.util.logging.Logger.getLogger(PuntaIndicador.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        }
+        //</editor-fold>
+        //</editor-fold>
+
+
+        /* Create and display the form */
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                new PuntaIndicador().setVisible(true);
+            }
+        });
+    }
+
+    // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JLabel Espesor;
+    private javax.swing.JLabel Material2;
+    private javax.swing.JLabel Material3;
+    private javax.swing.JLabel Material4;
+    private javax.swing.JComboBox<String> combo_desfera;
+    private javax.swing.JComboBox<String> combo_marca;
+    private javax.swing.JComboBox<String> combo_material;
+    private javax.swing.JComboBox<String> combo_para;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JMenu jMenu1;
+    private javax.swing.JMenu jMenu2;
+    private javax.swing.JMenuBar jMenuBar1;
+    private javax.swing.JMenuItem jMenuItem2;
+    private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JLabel label_dim;
+    private javax.swing.JMenuItem menu_recargar;
+    private javax.swing.JTable tabla_resultados;
+    // End of variables declaration//GEN-END:variables
+}
